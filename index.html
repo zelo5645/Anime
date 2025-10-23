@@ -1,277 +1,92 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>مشاهدة الأنمي — قالب ستايل كرنشي رول</title>
-  <meta name="description" content="قالب جاهز لموقع مشاهدة أنمي: إطار مشاهدة، اسم الأنمي، قائمة الحلقات، وإمكانية إضافة روابط EMBED بسهولة." />
-  <meta property="og:title" content="مشاهدة الأنمي — قالب ستايل كرنشي رول" />
-  <meta property="og:description" content="قالب جاهز لموقع مشاهدة أنمي: إطار مشاهدة، اسم الأنمي، قائمة الحلقات، وإمكانية إضافة روابط EMBED بسهولة." />
-  <meta property="og:type" content="website" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مشاهدة الأنمي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#0b0f1a; --panel:#0f1526; --muted:#9aa3c7; --text:#e8ecff; --brand:#ff8a00; --line:#222a45; --accent:#7aa2ff; --ok:#22c55e;
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(180deg, rgba(10,15,30,0.9), rgba(20,25,40,0.9));
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      min-height: 100vh;
+      padding: 20px;
+      backdrop-filter: blur(15px);
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0; font-family:"Cairo", system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans Arabic", sans-serif; background:linear-gradient(180deg, #0b0f1a 0%, #0b1020 100%); color:var(--text);}
-    a{color:inherit; text-decoration:none}
-    .app{display:grid; grid-template-columns: 300px 1fr; gap:16px; height:100%; max-width:1400px; margin:0 auto; padding:16px}
-    header.top{grid-column:1/-1; display:flex; align-items:center; gap:12px; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:10px 14px; position:sticky; top:16px; z-index:5}
-    .logo{display:flex; align-items:center; gap:10px; font-weight:700}
-    .logo .dot{width:10px; height:10px; border-radius:50%; background:linear-gradient(135deg, var(--brand), #ffb35a)}
-    .title-wrap{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
-    .anime-title{font-size:1.25rem; font-weight:700}
-    .muted{color:var(--muted)}
-    .chip{border:1px solid var(--line); background:rgba(255,255,255,.04); border-radius:999px; padding:4px 10px; font-size:.9rem}
 
-    /* Sidebar */
-    .sidebar{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:10px; height:calc(100% - 78px)}
-    .search{display:flex; gap:8px}
-    .search input{width:100%; background:#0b1022; color:var(--text); border:1px solid var(--line); border-radius:10px; padding:10px 12px}
-    .episodes{overflow:auto; flex:1; padding-right:2px}
-    .ep{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.03); cursor:pointer; transition:.15s transform ease}
-    .ep:hover{transform:translateY(-2px)}
-    .ep.active{outline:2px solid var(--accent); background:rgba(122,162,255,.08)}
-    .ep small{color:var(--muted)}
+    header {
+      width: 90%;
+      max-width: 900px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
 
-    /* Main */
-    .main{display:flex; flex-direction:column; gap:12px}
-    .player{background:#000; border:1px solid var(--line); border-radius:14px; overflow:hidden; position:relative}
-    .ratio{position:relative; width:100%; padding-top:56.25%}
-    .ratio iframe, .ratio .frame-placeholder{position:absolute; inset:0; width:100%; height:100%; border:0}
-    .frame-placeholder{display:grid; place-items:center; color:#cbd5ff; background:radial-gradient(1000px 600px at 50% 40%, #131b3a 0%, #0b0f1a 60%)}
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
 
-    .meta{display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:12px}
-    .meta .names{display:flex; flex-direction:column}
-    .meta .names b{font-size:1.05rem}
-    .meta .actions{display:flex; gap:8px; flex-wrap:wrap}
-    .btn{border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); color:var(--text); padding:8px 12px; border-radius:10px; cursor:pointer}
-    .btn.brand{border-color:#5a3b00; background:linear-gradient(180deg, rgba(255,158,64,.25), rgba(255,138,0,.12))}
-    .btn.ok{border-color:#0c6e3a; background:linear-gradient(180deg, rgba(34,197,94,.25), rgba(34,197,94,.10))}
+    .poster {
+      width: 200px;
+      height: 280px;
+      border-radius: 15px;
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
 
-    .embed-panel{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:12px; display:grid; gap:10px}
-    .embed-panel label{font-size:.95rem; color:var(--muted)}
-    .embed-panel input{width:100%; background:#0b1022; color:var(--text); border:1px solid var(--line); border-radius:10px; padding:10px 12px}
+    .poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-    /* Responsive */
-    @media (max-width: 1000px){
-      .app{grid-template-columns:1fr; gap:12px; padding:12px}
-      .sidebar{order:2; height:auto}
-      .main{order:1}
+    .frame-container {
+      width: 90%;
+      max-width: 900px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+    }
+
+    iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <header class="top">
-      <div class="logo"><span class="dot"></span> <span>AnimeView</span></div>
-      <div class="title-wrap">
-        <span class="anime-title" id="animeTitle">اسم الأنمي</span>
-        <span class="chip" id="seasonChip">الموسم 1</span>
-        <span class="chip" id="epCountChip">0 حلقة</span>
-      </div>
-      <div style="margin-inline-start:auto" class="muted">ستايل كرنشي رول — نسخة خفيفة</div>
-    </header>
+  <header>
+    <h1 id="animeTitle">chainsawman reze arc</h1>
+  </header>
 
-    <aside class="sidebar">
-      <div class="search">
-        <input id="search" type="search" placeholder="ابحث في الحلقات… (مثال: 5 أو عنوان)" />
-      </div>
-      <div id="episodes" class="episodes"></div>
-    </aside>
+  <div class="poster">
+    <img id="animePoster" src="https://i.ibb.co/1rj7LJj/anime-sample.jpg" alt="صورة الأنمي" />
+  </div>
 
-    <main class="main">
-      <div class="player">
-        <div class="ratio">
-          <div id="frameWrap" class="frame-placeholder">ضع رابط الـ EMBED ثم اختر الحلقة</div>
-        </div>
-      </div>
-
-      <div class="meta">
-        <div class="names">
-          <small class="muted">اسم الأنمي</small>
-          <b id="metaAnime">—</b>
-          <small class="muted">اسم الحلقة</small>
-          <b id="metaEpisode">—</b>
-        </div>
-        <div class="actions">
-          <button class="btn" id="prevBtn">◀️ السابق</button>
-          <button class="btn" id="nextBtn">التالي ▶️</button>
-          <button class="btn ok" id="playBtn">تشغيل</button>
-        </div>
-      </div>
-
-      <div class="embed-panel">
-        <label for="embedUrl">رابط الـ EMBED (الصيغة: https://.../embed/..)</label>
-        <input id="embedUrl" type="url" placeholder="مثال: https://example.com/player/embed?id=123" />
-        <label for="animeName">اسم الأنمي</label>
-        <input id="animeName" type="text" placeholder="مثال: Demon Slayer: Kimetsu no Yaiba" />
-        <label for="episodeName">اسم الحلقة (اختياري — لو سيبته فاضي هيستخدم رقم الحلقة)</label>
-        <input id="episodeName" type="text" placeholder="مثال: حلقة 1 — البداية" />
-        <button class="btn brand" id="addEpisodeBtn">➕ إضافة/تحديث الحلقة الحالية</button>
-      </div>
-    </main>
+  <div class="frame-container">
+    <iframe id="animePlayer" src="https://example.com/embed/episode1" allowfullscreen></iframe>
   </div>
 
   <script>
-    // ===== البيانات المبدئية (عدّل براحتك) =====
-    const state = {
-      animeTitle: 'اسم الأنمي',
-      season: 1,
-      episodes: [
-        // أمثلة:
-        // { no: 1, title: 'حلقة 1 — البداية', embed: 'https://example.com/embed?id=111' },
-        // { no: 2, title: 'حلقة 2 — المواجهة', embed: 'https://example.com/embed?id=222' },
-      ],
-      current: 0,
-    };
-
-    // ===== عناصر DOM =====
-    const episodesEl = document.getElementById('episodes');
-    const animeTitleEl = document.getElementById('animeTitle');
-    const seasonChip = document.getElementById('seasonChip');
-    const epCountChip = document.getElementById('epCountChip');
-    const metaAnime = document.getElementById('metaAnime');
-    const metaEpisode = document.getElementById('metaEpisode');
-    const frameWrap = document.getElementById('frameWrap');
-
-    const searchInput = document.getElementById('search');
-    const embedUrlInput = document.getElementById('embedUrl');
-    const animeNameInput = document.getElementById('animeName');
-    const episodeNameInput = document.getElementById('episodeName');
-
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const playBtn = document.getElementById('playBtn');
-    const addEpisodeBtn = document.getElementById('addEpisodeBtn');
-
-    // ===== وظائف مساعدة =====
-    function renderHeader(){
-      animeTitleEl.textContent = state.animeTitle || 'اسم الأنمي';
-      seasonChip.textContent = `الموسم ${state.season}`;
-      epCountChip.textContent = `${state.episodes.length} حلقة`;
-      metaAnime.textContent = state.animeTitle || '—';
-    }
-
-    function makeEpisodeItem(ep){
-      const div = document.createElement('div');
-      div.className = 'ep';
-      div.dataset.no = ep.no;
-      div.innerHTML = `<div><b>حلقة ${ep.no}</b><br/><small>${ep.title || '—'}</small></div><small>${new URL(ep.embed).hostname}</small>`;
-      div.addEventListener('click', ()=> selectEpisode(ep.no));
-      return div;
-    }
-
-    function renderEpisodes(filter=''){
-      episodesEl.innerHTML = '';
-      let list = state.episodes;
-      if(filter){
-        const f = filter.trim().toLowerCase();
-        list = list.filter(e => (''+e.no).includes(f) || (e.title||'').toLowerCase().includes(f));
-      }
-      list.sort((a,b)=> a.no - b.no).forEach(ep => {
-        const item = makeEpisodeItem(ep);
-        if (state.current === ep.no) item.classList.add('active');
-        episodesEl.appendChild(item);
-      });
-      epCountChip.textContent = `${state.episodes.length} حلقة`;
-    }
-
-    function mountIframe(url){
-      const iframe = document.createElement('iframe');
-      iframe.src = url;
-      iframe.allowFullscreen = true;
-      iframe.setAttribute('allow', 'autoplay; fullscreen; clipboard-write; encrypted-media; picture-in-picture');
-      iframe.setAttribute('referrerpolicy', 'no-referrer');
-      frameWrap.innerHTML = '';
-      frameWrap.className = 'ratio';
-      frameWrap.appendChild(iframe);
-    }
-
-    function selectEpisode(no){
-      const ep = state.episodes.find(e => e.no === no);
-      if(!ep) return;
-      state.current = ep.no;
-      document.querySelectorAll('.ep').forEach(el=> el.classList.remove('active'));
-      const active = [...episodesEl.children].find(c => +c.dataset.no === no); if(active) active.classList.add('active');
-      metaEpisode.textContent = ep.title || `حلقة ${ep.no}`;
-      animeTitleEl.textContent = state.animeTitle;
-      mountIframe(ep.embed);
-      // مزامنة حقول الإدخال مع الحلقة الحالية
-      embedUrlInput.value = ep.embed;
-      animeNameInput.value = state.animeTitle;
-      episodeNameInput.value = ep.title || '';
-    }
-
-    function addOrUpdateEpisode(){
-      const url = embedUrlInput.value.trim();
-      if(!url){ alert('من فضلك ضع رابط EMBED'); return; }
-      try { new URL(url); } catch { alert('رابط غير صحيح'); return; }
-      const epTitle = episodeNameInput.value.trim();
-      const name = animeNameInput.value.trim();
-      if(name){ state.animeTitle = name; }
-      // رقم الحلقة التالي تلقائيًا إن لم توجد حلقة محددة
-      const nextNo = state.episodes.length ? Math.max(...state.episodes.map(e=>e.no))+1 : 1;
-      let current = state.episodes.find(e => e.no === state.current);
-      if(current){ // تحديث الحالية
-        current.title = epTitle || current.title || `حلقة ${current.no}`;
-        current.embed = url;
-        selectEpisode(current.no);
-      } else { // إضافة جديدة
-        const ep = { no: nextNo, title: epTitle || `حلقة ${nextNo}`, embed: url };
-        state.episodes.push(ep);
-        renderEpisodes(searchInput.value);
-        selectEpisode(ep.no);
-      }
-      renderHeader();
-      saveToHash();
-    }
-
-    function prev(){
-      const idx = state.episodes.findIndex(e=> e.no===state.current);
-      if(idx>0) selectEpisode(state.episodes[idx-1].no);
-    }
-    function next(){
-      const idx = state.episodes.findIndex(e=> e.no===state.current);
-      if(idx>=0 && idx<state.episodes.length-1) selectEpisode(state.episodes[idx+1].no);
-    }
-
-    // ===== تخزين بسيط في URL hash لتشارك القائمة عند النسخ =====
-    function saveToHash(){
-      const payload = {
-        a: state.animeTitle,
-        s: state.season,
-        e: state.episodes
-      };
-      location.hash = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
-    }
-
-    function loadFromHash(){
-      if(!location.hash) return;
-      try{
-        const json = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(location.hash.slice(1))))));
-        if(json.a) state.animeTitle = json.a;
-        if(json.s) state.season = json.s;
-        if(Array.isArray(json.e)) state.episodes = json.e;
-      }catch(err){ console.warn('Hash load failed', err); }
-    }
-
-    // ===== Events =====
-    searchInput.addEventListener('input', e=> renderEpisodes(e.target.value));
-    prevBtn.addEventListener('click', prev);
-    nextBtn.addEventListener('click', next);
-    playBtn.addEventListener('click', ()=> state.current ? selectEpisode(state.current) : (state.episodes[0] && selectEpisode(state.episodes[0].no)) );
-    addEpisodeBtn.addEventListener('click', addOrUpdateEpisode);
-
-    // ===== Init =====
-    loadFromHash();
-    renderHeader();
-    renderEpisodes();
-    if(state.episodes[0]) selectEpisode(state.episodes[0].no);
-
-    // ملاحظة: لإضافة حلقات بسرعة بدون استخدام اللوحة، يمكنك لصق روابط EMBED مع العناوين في الكود أعلى state.episodes
+    // يمكنك تعديل هذه القيم يدويًا لعرض أنمي مختلف أو حلقة مختلفة:
+    document.getElementById('animeTitle').textContent = 'chainsawman reze arc';
+    document.getElementById('animePoster').src = 'https://assets.voxcinemas.com/posters/P_HO00012473_1758194053696.jpg';
+    document.getElementById('animePlayer').src = 'https://turbovidhls.com/t/68dc63c76e5b8';
   </script>
 </body>
 </html>
