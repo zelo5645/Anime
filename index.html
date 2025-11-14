@@ -35,7 +35,7 @@ html, body {
   height:20%;
   transition:transform 0.1s;
 }
-#player.jump{transform: translateY(-5%);}
+#player.jump{transform: translateY(-3%);}
 #player img{width:100%;height:100%;object-fit:contain;}
 #nameTag{
   position:absolute;
@@ -133,7 +133,7 @@ document.addEventListener("touchstart", e=>{
   e.preventDefault();
   if(!isJumping && !gameOver){
     isJumping=true;
-    jumpVelocity=12;
+    jumpVelocity=6; // صغر النطة
     player.classList.add("jump");
   }
 });
@@ -142,7 +142,7 @@ document.addEventListener("touchstart", e=>{
 document.addEventListener("keydown",e=>{
   if(e.code==="Space" && !isJumping && !gameOver){
     isJumping=true;
-    jumpVelocity=12;
+    jumpVelocity=6; // صغر النطة
     player.classList.add("jump");
   }
 });
@@ -174,7 +174,7 @@ function moveObstacles(){
   obstacles.forEach((obs,index)=>{
     if(gameOver) return;
     let left=parseFloat(obs.style.left);
-    left-=0.3; // أبطأ
+    left-=0.3; 
     obs.style.left=left+"%";
 
     const playerRect=player.getBoundingClientRect();
