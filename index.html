@@ -4,7 +4,14 @@
 <meta charset="UTF-8">
 <title>عبدالقوي يجري</title>
 <style>
-html, body {margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-family:Arial,sans-serif; background:black;}
+html, body {
+  margin:0; padding:0;
+  width:100%; height:100%;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  background:black;
+  touch-action:none; /* يمنع السحب الافتراضي على الموبايل */
+}
 #gameArea {
   position:relative;
   width:100vw;
@@ -23,31 +30,31 @@ html, body {margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-
 #player{
   position:absolute;
   bottom:0;
-  left:5vw;
-  width:8vw;
-  height:16vh;
+  left:5%;
+  width:10%;
+  height:20%;
   transition:transform 0.1s;
 }
-#player.jump{transform: translateY(-5vh);}
+#player.jump{transform: translateY(-5%);}
 #player img{width:100%;height:100%;object-fit:contain;}
 #nameTag{
   position:absolute;
-  width:12vw;
+  width:15%;
   text-align:center;
   color:white;
   font-weight:bold;
 }
 #score{
   position:absolute;
-  top:2vh;
-  left:2vw;
+  top:2%;
+  left:2%;
   font-size:4vw;
   font-weight:bold;
   color:white;
 }
 .obstacle{
-  width:2vw;
-  height:5vh;
+  width:2%;
+  height:5%;
   background-color:#ff0000;
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   position:absolute;
@@ -55,8 +62,8 @@ html, body {margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-
 }
 .blood{
   position:absolute;
-  width:1vw;
-  height:1vw;
+  width:1.5%;
+  height:1.5%;
   background-color:red;
   border-radius:50%;
   pointer-events:none;
@@ -103,38 +110,39 @@ const restartBtn=document.getElementById("restartBtn");
 
 let isJumping=false,jumpVelocity=0,gravity=0.5,playerBottom=0,score=0,gameOver=false,obstacles=[];
 
-// إنشاء النجوم في الخلفية
+// النجوم
 for(let i=0;i<150;i++){
   const star=document.createElement('div');
   star.classList.add('star');
-  star.style.width=star.style.height=Math.random()*0.5+0.2+'vh';
+  star.style.width=star.style.height=Math.random()*1+'vh';
   star.style.top=Math.random()*100+'vh';
   star.style.left=Math.random()*100+'vw';
   star.style.animationDuration=(Math.random()*2+1)+'s';
   gameArea.appendChild(star);
 }
 
-// وضع اسم عبدالقوي فوق الشخصية
+// تحديث اسم عبدالقوي
 function updateNameTag(){
-  nameTag.style.left=(player.offsetLeft+player.offsetWidth/2-60/2)+"px";
-  nameTag.style.bottom=(playerBottom+18)+'vh';
+  nameTag.style.left=(player.offsetLeft+player.offsetWidth/2-50)+"px";
+  nameTag.style.bottom=(playerBottom+21)+'%';
 }
 updateNameTag();
 
-// قفز عند لمس الشاشة
-gameArea.addEventListener("touchstart", ()=>{
+// القفز عند لمس الشاشة
+document.addEventListener("touchstart", e=>{
+  e.preventDefault();
   if(!isJumping && !gameOver){
     isJumping=true;
-    jumpVelocity=10;
+    jumpVelocity=12;
     player.classList.add("jump");
   }
 });
 
-// قفز عند الضغط على الكيبورد (كمبيوتر)
+// القفز على الكمبيوتر
 document.addEventListener("keydown",e=>{
   if(e.code==="Space" && !isJumping && !gameOver){
     isJumping=true;
-    jumpVelocity=10;
+    jumpVelocity=12;
     player.classList.add("jump");
   }
 });
@@ -143,7 +151,7 @@ function createObstacle(){
   if(gameOver) return;
   const obs=document.createElement("div");
   obs.classList.add("obstacle");
-  obs.style.left='100vw';
+  obs.style.left='100%';
   gameArea.appendChild(obs);
   obstacles.push(obs);
 }
@@ -152,7 +160,7 @@ function spawnBlood(){
   for(let i=0;i<100;i++){
     const b=document.createElement("div");
     b.classList.add("blood");
-    const size=Math.random()*1+0.5+'vh';
+    const size=Math.random()*1.5+'%';
     b.style.width=size;
     b.style.height=size;
     b.style.left=Math.random()*100+'vw';
@@ -166,8 +174,8 @@ function moveObstacles(){
   obstacles.forEach((obs,index)=>{
     if(gameOver) return;
     let left=parseFloat(obs.style.left);
-    left-=0.5; // سرعة مناسبة للموبايل
-    obs.style.left=left+"vw";
+    left-=0.5;
+    obs.style.left=left+"%";
 
     const playerRect=player.getBoundingClientRect();
     const obsRect=obs.getBoundingClientRect();
@@ -196,7 +204,7 @@ function jump(){
       player.classList.remove("jump");
     }
   }
-  player.style.bottom=playerBottom+'vh';
+  player.style.bottom=playerBottom+'%';
   updateNameTag();
 }
 
