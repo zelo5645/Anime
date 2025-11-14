@@ -121,8 +121,18 @@ function updateNameTag(){
 }
 updateNameTag();
 
+// قفز عند لمس الشاشة
+gameArea.addEventListener("touchstart", ()=>{
+  if(!isJumping && !gameOver){
+    isJumping=true;
+    jumpVelocity=10;
+    player.classList.add("jump");
+  }
+});
+
+// قفز عند الضغط على الكيبورد (كمبيوتر)
 document.addEventListener("keydown",e=>{
-  if(e.code==="Space"&&!isJumping&&!gameOver){
+  if(e.code==="Space" && !isJumping && !gameOver){
     isJumping=true;
     jumpVelocity=10;
     player.classList.add("jump");
@@ -156,7 +166,7 @@ function moveObstacles(){
   obstacles.forEach((obs,index)=>{
     if(gameOver) return;
     let left=parseFloat(obs.style.left);
-    left-=0.5; // سرعة أقل للموبايل
+    left-=0.5; // سرعة مناسبة للموبايل
     obs.style.left=left+"vw";
 
     const playerRect=player.getBoundingClientRect();
@@ -177,7 +187,7 @@ function moveObstacles(){
 }
 
 function jump(){
-  if(isJumping&&!gameOver){
+  if(isJumping && !gameOver){
     playerBottom+=jumpVelocity;
     jumpVelocity-=gravity;
     if(playerBottom<=0){
@@ -191,7 +201,7 @@ function jump(){
 }
 
 function gameLoop(){
-  if(!gameOver&&Math.random()<0.02) createObstacle();
+  if(!gameOver && Math.random()<0.02) createObstacle();
   if(!gameOver) score++;
   scoreTag.textContent="Score: "+score;
   moveObstacles();
