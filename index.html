@@ -4,26 +4,89 @@
 <meta charset="UTF-8">
 <title>عبدالقوي يجري</title>
 <style>
-body{margin:0;overflow:hidden;background-color:#0b3d91;font-family:Arial,sans-serif;}
-#gameArea{position:relative;width:100vw;height:300px;border-bottom:2px solid #fff;overflow:hidden;background:radial-gradient(#0b3d91,#000 90%);}
-#moon{position:absolute;width:50px;height:50px;background-color:#fff27a;border-radius:50%;top:20px;right:20px;box-shadow:0 0 20px #fff27a;}
-.star{position:absolute;background-color:white;border-radius:50%;opacity:0.8;animation:twinkle 2s infinite alternate;}
+html, body {margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-family:Arial,sans-serif; background:black;}
+#gameArea {
+  position:relative;
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  background:black;
+}
+.star{
+  position:absolute;
+  background-color:white;
+  border-radius:50%;
+  opacity:0.8;
+  animation:twinkle 2s infinite alternate;
+}
 @keyframes twinkle{from{opacity:0.3;}to{opacity:1;}}
-#player{position:absolute;bottom:0;left:50px;width:60px;height:100px;transition:transform 0.1s;}
+#player{
+  position:absolute;
+  bottom:0;
+  left:50px;
+  width:80px;
+  height:120px;
+  transition:transform 0.1s;
+}
 #player.jump{transform: translateY(-5px);}
 #player img{width:100%;height:100%;object-fit:contain;}
-#nameTag{position:absolute;width:100px;text-align:center;color:white;font-weight:bold;}
-#score{position:absolute;top:10px;left:10px;font-size:20px;font-weight:bold;color:white;}
-.obstacle{width:10px;height:20px;background-color:#ff0000;clip-path: polygon(50% 0%, 0% 100%, 100% 100%);position:absolute;bottom:0;}
-.blood{position:absolute;width:10px;height:10px;background-color:red;border-radius:50%;pointer-events:none;}
-#gameOverMsg{position:absolute;width:100%;text-align:center;top:50px;font-size:30px;color:red;display:none;font-weight:bold;}
-#restartBtn{position:absolute;top:150px;left:50%;transform:translateX(-50%);font-size:20px;padding:10px 20px;display:none;cursor:pointer;}
+#nameTag{
+  position:absolute;
+  width:120px;
+  text-align:center;
+  color:white;
+  font-weight:bold;
+}
+#score{
+  position:absolute;
+  top:10px;
+  left:10px;
+  font-size:20px;
+  font-weight:bold;
+  color:white;
+}
+.obstacle{
+  width:10px;
+  height:20px;
+  background-color:#ff0000;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  position:absolute;
+  bottom:0;
+}
+.blood{
+  position:absolute;
+  width:10px;
+  height:10px;
+  background-color:red;
+  border-radius:50%;
+  pointer-events:none;
+}
+#gameOverMsg{
+  position:absolute;
+  width:100%;
+  text-align:center;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:30px;
+  color:red;
+  display:none;
+  font-weight:bold;
+}
+#restartBtn{
+  position:absolute;
+  top:60%;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:20px;
+  padding:10px 20px;
+  display:none;
+  cursor:pointer;
+}
 </style>
 </head>
 <body>
 <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" autoplay loop></audio>
 <div id="gameArea">
-  <div id="moon"></div>
   <div id="player"><img src="https://i.ibb.co/WJwzLCH/head.png" alt="عبدالقوي"></div>
   <div id="nameTag">عبدالقوي</div>
   <div id="score">Score: 0</div>
@@ -37,25 +100,31 @@ const scoreTag=document.getElementById("score");
 const gameArea=document.getElementById("gameArea");
 const gameOverMsg=document.getElementById("gameOverMsg");
 const restartBtn=document.getElementById("restartBtn");
+
 let isJumping=false,jumpVelocity=0,gravity=0.5,playerBottom=0,score=0,gameOver=false,obstacles=[];
 
-for(let i=0;i<50;i++){
+// إنشاء النجوم في الخلفية
+for(let i=0;i<150;i++){
   const star=document.createElement('div');
   star.classList.add('star');
   star.style.width=star.style.height=Math.random()*3+1+'px';
-  star.style.top=Math.random()*180+'px';
+  star.style.top=Math.random()*window.innerHeight+'px';
   star.style.left=Math.random()*window.innerWidth+'px';
   star.style.animationDuration=(Math.random()*2+1)+'s';
   gameArea.appendChild(star);
 }
 
-nameTag.style.left=(player.offsetLeft+player.offsetWidth/2-50/2)+"px";
-nameTag.style.bottom=(playerBottom+110)+"px";
+// وضع اسم عبدالقوي فوق الشخصية
+function updateNameTag(){
+  nameTag.style.left=(player.offsetLeft+player.offsetWidth/2-60)+"px";
+  nameTag.style.bottom=(playerBottom+130)+"px";
+}
+updateNameTag();
 
 document.addEventListener("keydown",e=>{
   if(e.code==="Space"&&!isJumping&&!gameOver){
     isJumping=true;
-    jumpVelocity=8;
+    jumpVelocity=10;
     player.classList.add("jump");
   }
 });
@@ -64,18 +133,18 @@ function createObstacle(){
   if(gameOver) return;
   const obs=document.createElement("div");
   obs.classList.add("obstacle");
-  obs.style.left=gameArea.offsetWidth+"px";
+  obs.style.left=window.innerWidth+"px";
   gameArea.appendChild(obs);
   obstacles.push(obs);
 }
 
-function spawnBlood(x,y){
+function spawnBlood(){
   for(let i=0;i<100;i++){
     const b=document.createElement("div");
     b.classList.add("blood");
     b.style.width=b.style.height=Math.random()*15+5+'px';
     b.style.left=Math.random()*window.innerWidth+'px';
-    b.style.bottom=Math.random()*200+'px';
+    b.style.top=Math.random()*window.innerHeight+'px';
     gameArea.appendChild(b);
     setTimeout(()=>b.remove(),2000);
   }
@@ -85,7 +154,7 @@ function moveObstacles(){
   obstacles.forEach((obs,index)=>{
     if(gameOver) return;
     let left=parseInt(obs.style.left);
-    left-=3;
+    left-=5;
     obs.style.left=left+"px";
 
     const playerRect=player.getBoundingClientRect();
@@ -95,7 +164,7 @@ function moveObstacles(){
       gameOverMsg.style.display="block";
       restartBtn.style.display="block";
       player.style.transform="rotate(180deg)";
-      spawnBlood(player.offsetLeft,playerBottom);
+      spawnBlood();
     }
 
     if(left+obs.offsetWidth<0){
@@ -116,8 +185,7 @@ function jump(){
     }
   }
   player.style.bottom=playerBottom+"px";
-  nameTag.style.left=(parseInt(player.style.left)+player.offsetWidth/2-50/2)+"px";
-  nameTag.style.bottom=(playerBottom+110)+"px";
+  updateNameTag();
 }
 
 function gameLoop(){
@@ -139,6 +207,14 @@ restartBtn.addEventListener("click",()=>{
   player.style.transform="rotate(0deg)";
   gameOverMsg.style.display="none";
   restartBtn.style.display="none";
+});
+
+window.addEventListener("resize", ()=>{
+  // إعادة وضع النجوم عند تغيير حجم الشاشة
+  document.querySelectorAll('.star').forEach(star=>{
+    star.style.top=Math.random()*window.innerHeight+'px';
+    star.style.left=Math.random()*window.innerWidth+'px';
+  });
 });
 
 gameLoop();
