@@ -23,31 +23,31 @@ html, body {margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-
 #player{
   position:absolute;
   bottom:0;
-  left:50px;
-  width:80px;
-  height:120px;
+  left:5vw;
+  width:8vw;
+  height:16vh;
   transition:transform 0.1s;
 }
-#player.jump{transform: translateY(-5px);}
+#player.jump{transform: translateY(-5vh);}
 #player img{width:100%;height:100%;object-fit:contain;}
 #nameTag{
   position:absolute;
-  width:120px;
+  width:12vw;
   text-align:center;
   color:white;
   font-weight:bold;
 }
 #score{
   position:absolute;
-  top:10px;
-  left:10px;
-  font-size:20px;
+  top:2vh;
+  left:2vw;
+  font-size:4vw;
   font-weight:bold;
   color:white;
 }
 .obstacle{
-  width:10px;
-  height:20px;
+  width:2vw;
+  height:5vh;
   background-color:#ff0000;
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   position:absolute;
@@ -55,8 +55,8 @@ html, body {margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-
 }
 .blood{
   position:absolute;
-  width:10px;
-  height:10px;
+  width:1vw;
+  height:1vw;
   background-color:red;
   border-radius:50%;
   pointer-events:none;
@@ -67,7 +67,7 @@ html, body {margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-
   text-align:center;
   top:50%;
   transform:translateY(-50%);
-  font-size:30px;
+  font-size:6vw;
   color:red;
   display:none;
   font-weight:bold;
@@ -77,8 +77,8 @@ html, body {margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-
   top:60%;
   left:50%;
   transform:translateX(-50%);
-  font-size:20px;
-  padding:10px 20px;
+  font-size:4vw;
+  padding:1vh 2vw;
   display:none;
   cursor:pointer;
 }
@@ -107,17 +107,17 @@ let isJumping=false,jumpVelocity=0,gravity=0.5,playerBottom=0,score=0,gameOver=f
 for(let i=0;i<150;i++){
   const star=document.createElement('div');
   star.classList.add('star');
-  star.style.width=star.style.height=Math.random()*3+1+'px';
-  star.style.top=Math.random()*window.innerHeight+'px';
-  star.style.left=Math.random()*window.innerWidth+'px';
+  star.style.width=star.style.height=Math.random()*0.5+0.2+'vh';
+  star.style.top=Math.random()*100+'vh';
+  star.style.left=Math.random()*100+'vw';
   star.style.animationDuration=(Math.random()*2+1)+'s';
   gameArea.appendChild(star);
 }
 
 // وضع اسم عبدالقوي فوق الشخصية
 function updateNameTag(){
-  nameTag.style.left=(player.offsetLeft+player.offsetWidth/2-60)+"px";
-  nameTag.style.bottom=(playerBottom+130)+"px";
+  nameTag.style.left=(player.offsetLeft+player.offsetWidth/2-60/2)+"px";
+  nameTag.style.bottom=(playerBottom+18)+'vh';
 }
 updateNameTag();
 
@@ -133,7 +133,7 @@ function createObstacle(){
   if(gameOver) return;
   const obs=document.createElement("div");
   obs.classList.add("obstacle");
-  obs.style.left=window.innerWidth+"px";
+  obs.style.left='100vw';
   gameArea.appendChild(obs);
   obstacles.push(obs);
 }
@@ -142,9 +142,11 @@ function spawnBlood(){
   for(let i=0;i<100;i++){
     const b=document.createElement("div");
     b.classList.add("blood");
-    b.style.width=b.style.height=Math.random()*15+5+'px';
-    b.style.left=Math.random()*window.innerWidth+'px';
-    b.style.top=Math.random()*window.innerHeight+'px';
+    const size=Math.random()*1+0.5+'vh';
+    b.style.width=size;
+    b.style.height=size;
+    b.style.left=Math.random()*100+'vw';
+    b.style.top=Math.random()*100+'vh';
     gameArea.appendChild(b);
     setTimeout(()=>b.remove(),2000);
   }
@@ -153,9 +155,9 @@ function spawnBlood(){
 function moveObstacles(){
   obstacles.forEach((obs,index)=>{
     if(gameOver) return;
-    let left=parseInt(obs.style.left);
-    left-=5;
-    obs.style.left=left+"px";
+    let left=parseFloat(obs.style.left);
+    left-=0.5; // سرعة أقل للموبايل
+    obs.style.left=left+"vw";
 
     const playerRect=player.getBoundingClientRect();
     const obsRect=obs.getBoundingClientRect();
@@ -167,7 +169,7 @@ function moveObstacles(){
       spawnBlood();
     }
 
-    if(left+obs.offsetWidth<0){
+    if(left+2<0){
       obs.remove();
       obstacles.splice(index,1);
     }
@@ -184,7 +186,7 @@ function jump(){
       player.classList.remove("jump");
     }
   }
-  player.style.bottom=playerBottom+"px";
+  player.style.bottom=playerBottom+'vh';
   updateNameTag();
 }
 
@@ -210,10 +212,9 @@ restartBtn.addEventListener("click",()=>{
 });
 
 window.addEventListener("resize", ()=>{
-  // إعادة وضع النجوم عند تغيير حجم الشاشة
   document.querySelectorAll('.star').forEach(star=>{
-    star.style.top=Math.random()*window.innerHeight+'px';
-    star.style.left=Math.random()*window.innerWidth+'px';
+    star.style.top=Math.random()*100+'vh';
+    star.style.left=Math.random()*100+'vw';
   });
 });
 
